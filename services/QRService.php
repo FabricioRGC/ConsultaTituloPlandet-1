@@ -4,7 +4,7 @@ class QRService
 {
        public function generarQR($url, $uniqueId)
     {
-        $dir = __DIR__ . '/../public/qrcodes/';
+        $dir = __DIR__ . '/../qrcodes/';
 
         if (!is_dir($dir)) mkdir($dir, 0777, true);
 
@@ -18,7 +18,7 @@ class QRService
 
     public function moverPDF($file)
     {
-        $dir = __DIR__ . '/../public/uploads/';
+        $dir = __DIR__ . '/../uploads/';
 
         if (!is_dir($dir)) mkdir($dir, 0777, true);
 

@@ -8,6 +8,7 @@ $error = isset($_GET['error']);
     <title>Login</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="stylesheet" href="/styles/login.css">
+    <link rel="icon" type="image/x-icon" href="/src/icon.svg">
 </head>
 <body>
     <div class="login-container">

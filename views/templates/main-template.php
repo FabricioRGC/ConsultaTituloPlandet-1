@@ -14,6 +14,7 @@ function render_page($contentFile, $pageTitle = 'Sistema', $additionalCSS = [], 
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/x-icon" href="/src/icon.svg">
         <title><?php echo htmlspecialchars($pageTitle); ?></title>
         
         <!-- CSS adicionales específicos -->
@@ -31,8 +32,8 @@ function render_page($contentFile, $pageTitle = 'Sistema', $additionalCSS = [], 
             render_navbar( $rol, $nombre);
         }
         ?>
-        
-        <main class="main-content">
+
+        <main class="main-content" style="background-color: #e3e4e1ff ; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; min-height: 100vh; padding: 1rem;  flex-direction: column; flex: 1;">
             <?php 
             // Incluir el contenido de la página
             if (file_exists($contentFile)) {

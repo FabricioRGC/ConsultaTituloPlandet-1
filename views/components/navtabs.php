@@ -1,22 +1,37 @@
 <?php
 $rol = $_SESSION['usuario_rol'] ?? null;
 
+// 🔥 NUEVO: Obtener tab activo de la URL
+$activeTab = $_GET['tab'] ?? null;
+
 $tabs = [
     [
         "key" => "generarQR",
         "label" => "Generacion de QRs",
-        "color" => "green",
+        "color" => "blue",
         "roles" => ["admin"]
     ],
     [
-        "key" => "proyectos",
-        "label" => "Solicitar Insumos",
-        "color" => "blue",
-        "roles" => ["admin", "locador"]
+        "key" => "ingresarVarios",
+        "label" => "Ingresar varios",
+        "color" => "green",
+        "roles" => ["test"]
     ],
     [
-        "key" => "tareas",
-        "label" => "Asignar Tarea",
+        "key" => "updateQR-PDF",
+        "label" => "Actualizar Qr / Pdf",
+        "color" => "purple",
+        "roles" => ["admin"]
+    ],
+    [
+        "key" => "searchQR-PDF",
+        "label" => "Buscar Qr / Pdf",
+        "color" => "purple",
+        "roles" => ["admin"]
+    ],
+    [
+        "key" => "generarTitulo",
+        "label" => "Generar Titulo",
         "color" => "purple",
         "roles" => ["admin"]
     ],
@@ -26,6 +41,11 @@ $tabs = [
 $tabs_permitidos = array_filter($tabs, function($tab) use ($rol) {
     return in_array($rol, $tab["roles"]);
 });
+
+// 🔥 NUEVO: Si no hay tab activo en URL, usar el primero permitido
+if (!$activeTab && !empty($tabs_permitidos)) {
+    $activeTab = reset($tabs_permitidos)['key'];
+}
 ?>
 
 <link rel="stylesheet" href="/styles/navtabs.css">
@@ -33,9 +53,12 @@ $tabs_permitidos = array_filter($tabs, function($tab) use ($rol) {
 <div class="tabs-container">
     <?php foreach ($tabs_permitidos as $tab): ?>
         <button 
-            class="tab-btn" 
+            class="tab-btn <?= $activeTab === $tab['key'] ? 'active' : '' ?>" 
             data-tab="<?= $tab["key"] ?>" 
             data-color="<?= $tab["color"] ?>"
+            <?php if ($activeTab === $tab['key']): ?>
+                style="background: var(--<?= $tab['color'] ?>); color: white;"
+            <?php endif; ?>
         >
             <?= $tab["label"] ?>
         </button>
@@ -43,13 +66,13 @@ $tabs_permitidos = array_filter($tabs, function($tab) use ($rol) {
 </div>
 
 <div id="tab-contenido">
-
     <?php foreach ($tabs_permitidos as $tab): ?>
-        <div class="tab-content" id="tab-<?= $tab["key"] ?>">
+        <!-- 🔥 MODIFICADO: display desde PHP según el tab activo -->
+        <div class="tab-content" id="tab-<?= $tab["key"] ?>" 
+             style="display: <?= $activeTab === $tab['key'] ? 'block' : 'none' ?>">
             <?php include __DIR__ . "/tab-{$tab['key']}.php"; ?>
         </div>
     <?php endforeach; ?>
-
 </div>
 
 <script>
@@ -59,12 +82,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (buttons.length === 0) return;
 
-    // activar el primer tab permitido
-    changeTab(buttons[0].dataset.tab);
-
     buttons.forEach(btn => {
         btn.addEventListener("click", () => {
-            changeTab(btn.dataset.tab);
+            const key = btn.dataset.tab;
+            
+            // 🔥 NUEVO: Actualizar URL con el tab seleccionado
+            const url = new URL(window.location);
+            url.searchParams.set('tab', key);
+            window.history.pushState({}, '', url);
+            
+            changeTab(key);
         });
     });
 

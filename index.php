@@ -2,10 +2,10 @@
 // public/index.php
 // Front controller - punto de entrada
 
-require_once __DIR__ . '/../controllers/AuthController.php';
-require_once __DIR__ . '/../services/AuthMiddleware.php';
-require_once __DIR__ . '/../models/User.php';
-require_once __DIR__ . '/../views/templates/main-template.php';
+require_once __DIR__ . '/controllers/AuthController.php';
+require_once __DIR__ . '/services/AuthMiddleware.php';
+require_once __DIR__ . '/models/User.php';
+require_once __DIR__ . '/views/templates/main-template.php';
 
 $action = $_GET['action'] ?? '';
 
@@ -27,14 +27,14 @@ switch ($action) {
 
         if ($rol === 'admin') {
             render_page(
-                __DIR__ . '/../views/pages/dash_admin.php',
+                __DIR__ . '/views/pages/dash_admin.php',
                 'Dashboard Admin',
                 ['/styles/dashboard.css'],
                 true  // requiere autenticación
             );
         } elseif ($rol === 'locador') {
             render_page(
-                __DIR__ . '/../views/pages/dash_locador.php',
+                __DIR__ . '/views/pages/dash_locador.php',
                 'Dashboard Locador',
                 ['/styles/dashboard.css'],
                 true
@@ -50,6 +50,6 @@ switch ($action) {
         
     default:
         // Mostrar login SIN template (login no usa navbar/footer)
-        require_once __DIR__ . '/../views/login.php';
+        require_once __DIR__ . '/views/login.php';
         break;
 }

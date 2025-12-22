@@ -3,6 +3,7 @@
   --green: #16a34a;
   --blue: #2563eb;
   --purple: #7c3aed;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* contenedor */
@@ -10,9 +11,12 @@
   display: flex;
   background: white;
   border-radius: 12px;
-  margin-bottom: 20px;
+  margin-top: -15px;
+  margin-bottom: 5px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 /* botones */
