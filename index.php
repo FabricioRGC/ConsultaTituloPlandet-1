@@ -67,7 +67,7 @@ switch ($action) {
         break;
 
     default:
-        // Mostrar login SIN templateee (login no usa navbar/footer)
+        // Mostrar login SIN templateeeeee (login no usa navbar/footer)
         require_once __DIR__ . '/views/login.php';
         break;
 }
