@@ -9,7 +9,7 @@ require_once __DIR__ . '/models/User.php';
 require_once __DIR__ . '/models/AuditModel.php';
 require_once __DIR__ . '/views/templates/main-template.php';
 
-$action = $_GET['action'] ?? '';.
+$action = $_GET['action'] ?? '';
 
 $authController = new AuthController();
 $auditController = new AuditController();
