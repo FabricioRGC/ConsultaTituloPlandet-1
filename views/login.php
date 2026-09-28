@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 $error = isset($_GET['error']);
 ?>
 <!DOCTYPE html>
