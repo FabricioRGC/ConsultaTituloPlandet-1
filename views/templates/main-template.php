@@ -4,7 +4,7 @@ function render_page($contentFile, $pageTitle = 'Sistema', $additionalCSS = [], 
     if ($requireAuth) {
         if (session_status() !== PHP_SESSION_ACTIVE) session_start();
         if (!isset($_SESSION['usuario_id'])) {
-            header("Location: /ConsultaTituloPlandet/index.php");
+            header("Location: /ConsultaTituloPlandet-1/index.php");
             exit;
         }
     }
@@ -14,7 +14,7 @@ function render_page($contentFile, $pageTitle = 'Sistema', $additionalCSS = [], 
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="icon" type="image/x-icon" href="/ConsultaTituloPlandet/src/icon.svg">
+        <link rel="icon" type="image/x-icon" href="/ConsultaTituloPlandet-1/src/icon.svg">
         <title><?php echo htmlspecialchars($pageTitle); ?></title>
         
         <!-- CSS adicionales específicos -->
