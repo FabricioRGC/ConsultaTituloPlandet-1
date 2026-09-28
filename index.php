@@ -9,6 +9,8 @@ require_once __DIR__ . '/views/templates/main-template.php';
 
 $action = $_GET['action'] ?? '';
 
+
+
 $authController = new AuthController();
 
 switch ($action) {
