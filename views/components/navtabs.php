@@ -48,11 +48,7 @@ if (!$activeTab && !empty($tabs_permitidos)) {
 }
 ?>
 
-<<<<<<< Updated upstream
 <link rel="stylesheet" href="/styles/navtabs.css">
-=======
-<link rel="stylesheet" href="/ConsultaTituloPlandet-1/styles/navtabs.css">
->>>>>>> Stashed changes
 
 <div class="tabs-container">
     <?php foreach ($tabs_permitidos as $tab): ?>

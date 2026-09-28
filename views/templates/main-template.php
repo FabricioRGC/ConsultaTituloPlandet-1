@@ -5,11 +5,7 @@ function render_page($contentFile, $pageTitle = 'Sistema', $additionalCSS = [], 
     if ($requireAuth) {
         if (session_status() !== PHP_SESSION_ACTIVE) session_start();
         if (!isset($_SESSION['usuario_id'])) {
-<<<<<<< Updated upstream
             header("Location: /index.php");
-=======
-            header("Location: /ConsultaTituloPlandet-1/index.php");
->>>>>>> Stashed changes
             exit;
         }
     }
@@ -22,11 +18,7 @@ function render_page($contentFile, $pageTitle = 'Sistema', $additionalCSS = [], 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< Updated upstream
         <link rel="icon" type="image/x-icon" href="/src/icon.svg">
-=======
-        <link rel="icon" type="image/x-icon" href="/ConsultaTituloPlandet-1/src/icon.svg">
->>>>>>> Stashed changes
         <title><?php echo htmlspecialchars($pageTitle); ?></title>
 
         <!-- CSS adicionales específicos -->

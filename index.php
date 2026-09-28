@@ -29,35 +29,21 @@ switch ($action) {
             render_page(
                 __DIR__ . '/views/pages/dash_admin.php',
                 'Dashboard Admin',
-<<<<<<< Updated upstream
                 ['/styles/dashboard.css'],
                 true  // requiere autenticación
-=======
-                ['/ConsultaTituloPlandet-1/styles/dasboard.css'],
-                true
->>>>>>> Stashed changes
             );
         } elseif ($rol === 'locador') {
             render_page(
                 __DIR__ . '/views/pages/dash_locador.php',
-<<<<<<< Updated upstream
                 'Dashboard Locador',
                 ['/styles/dashboard.css'],
-=======
-                'Dashboard User',
-                ['/ConsultaTituloPlandet-1/styles/dasboard.css'],
->>>>>>> Stashed changes
                 true
             );
         } else {
             // rol desconocido
             if (session_status() !== PHP_SESSION_ACTIVE) session_start();
             session_destroy();
-<<<<<<< Updated upstream
             header("Location: /index.php");
-=======
-            header("Location: /ConsultaTituloPlandet-1/index.php");
->>>>>>> Stashed changes
             exit;
         }
         break;
