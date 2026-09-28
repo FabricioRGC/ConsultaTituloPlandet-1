@@ -19,7 +19,11 @@ $qrPath = isset($_GET['qr']) ? htmlspecialchars($_GET['qr']) : "";
 $fechaActual = date('Y-m-d');
 ?>
 
+<<<<<<< Updated upstream
 <link rel="stylesheet" href="/styles/tab-generarQR.css">
+=======
+<link rel="stylesheet" href="/ConsultaTituloPlandet-1/styles/tab-generarQR.css">
+>>>>>>> Stashed changes
 
 <div class="tab-generarQR">
     <div class="main-container">
