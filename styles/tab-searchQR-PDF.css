@@ -100,17 +100,11 @@
   padding: 1rem;
   text-align: left;
   font-weight: 600;
-<<<<<<< HEAD
-  color: #2d3748;
-=======
   color: #4a5568;
->>>>>>> CalebRomero
   border-bottom: 2px solid #e2e8f0;
   white-space: nowrap;
 }
 
-<<<<<<< HEAD
-=======
 .sqr-th-sortable {
   cursor: pointer;
   user-select: none;
@@ -140,7 +134,6 @@
   color: #4a5568;
 }
 
->>>>>>> CalebRomero
 .sqr-th-select {
   width: 80px;
   text-align: center;

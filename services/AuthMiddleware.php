@@ -11,11 +11,7 @@ class AuthMiddleware {
     public static function requireLogin() {
         self::ensureSession();
         if (empty($_SESSION['usuario_id'])) {
-<<<<<<< HEAD
-            header("Location: /index.php");
-=======
             header("Location: /ConsultaTituloPlandet-1/index.php");
->>>>>>> CalebRomero
             exit;
         }
     }
