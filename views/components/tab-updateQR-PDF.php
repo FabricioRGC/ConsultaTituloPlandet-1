@@ -7,7 +7,11 @@ extract($data);
 $currentTab = $_GET['tab'] ?? 'updateQR-PDF';
 ?>
 
+<<<<<<< Updated upstream
 <link rel="stylesheet" href="/styles/tab-updateQR-PDF.css">
+=======
+<link rel="stylesheet" href="/ConsultaTituloPlandet-1/styles/tab-updateQR-PDF.css">
+>>>>>>> Stashed changes
 
 <div class="upd-container" data-component="update-qr-pdf">
 

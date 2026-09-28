@@ -36,7 +36,29 @@ class QRController {
 
         // 5. Guardar en BD
         if ($model->insert($partida, $title, $pdfPath, $qrPath, $uniqueId, $fecha)) {
+<<<<<<< Updated upstream
             header("Location: index.php?action=dashboard&qr=" . urlencode($qrPath));
+=======
+            if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+            $audit = new AuditModel();
+            $audit->logActivity(
+                (int)($_SESSION['usuario_id'] ?? 0),
+                'CREATE_QR',
+                'QR',
+                'documents',
+                $uniqueId,
+                'Registro de documento con QR',
+                [
+                    'title' => $title,
+                    'partida' => $partida,
+                    'pdf_path' => $pdfPath,
+                    'qr_path' => $qrPath
+                ],
+                $_SESSION['audit_session_token'] ?? session_id()
+            );
+
+            header("Location: /ConsultaTituloPlandet-1/index.php?action=dasboard&tab=generarQR&uploaded=1&qr=" . urlencode($qrPath));
+>>>>>>> Stashed changes
             exit();
         } else {
             echo "Error guardando en la base de datos.";

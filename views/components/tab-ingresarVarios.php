@@ -1,11 +1,19 @@
 <?php
+<<<<<<< Updated upstream
 require_once __DIR__ . '/../../controllers/QRController.php';
+=======
+require_once __DIR__ . 'ConsultaTituloPlandet-1/controllers/QRController.php';
+>>>>>>> Stashed changes
 
 $controller = new QRController();
 $controller->subirMultiples();
 ?>
 
+<<<<<<< Updated upstream
 <link rel="stylesheet" href="/styles/tab-ingresarVarios.css">
+=======
+<link rel="stylesheet" href="ConsultaTituloPlandet-1/styles/tab-ingresarVarios.css">
+>>>>>>> Stashed changes
 
 <div class="upload-wrapper">
     <div class="upload-container">

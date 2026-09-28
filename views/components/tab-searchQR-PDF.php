@@ -6,7 +6,11 @@ $currentTab = $_GET['tab'] ?? 'searchQR-PDF';
 $controller = new DocumentController();
 $documents = $controller->getDocuments();
 ?>
+<<<<<<< Updated upstream
 <link rel="stylesheet" href="/styles/tab-searchQR-PDF.css">
+=======
+<link rel="stylesheet" href="/ConsultaTituloPlandet-1/styles/tab-searchQR-PDF.css">
+>>>>>>> Stashed changes
 <div class="tab-searchqr sqr-container" id="searchQRTab">
 
     <!-- LISTADO DE DOCUMENTOS -->
@@ -65,8 +69,12 @@ $documents = $controller->getDocuments();
                                 <td class="sqr-td-partida"><?= htmlspecialchars($row['partida']) ?></td>
                                 <td class="sqr-td-fecha"><?= htmlspecialchars($row['fecha']) ?></td>
                                 <td class="sqr-td-center">
+<<<<<<< Updated upstream
                                     <!-- 🔥 MODIFICADO: Mantener tab en URL del PDF -->
                                     <a href="<?= htmlspecialchars($row['pdf_path']) ?>"
+=======
+                                    <a href="/ConsultaTituloPlandet-1/view.php?id=<?= urlencode($row['unique_id'] ?? '') ?>"
+>>>>>>> Stashed changes
                                         target="_blank"
                                         class="sqr-btn sqr-btn-info">
                                         📑 Ver PDF
@@ -192,8 +200,20 @@ $documents = $controller->getDocuments();
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 <script>
+<<<<<<< Updated upstream
     // 🔥 NUEVO: Pasar tab actual a JavaScript
     const CURRENT_TAB = "<?= $currentTab ?>";
+=======
+    // ðŸ”¥ NUEVO: Pasar tab actual a JavaScript
+    const CURRENT_TAB = "<?= $tabKey ?>";
+    function trackEvent(action, module, description, metadata = {}) {
+        fetch('/ConsultaTituloPlandet-1/index.php?action=track_event', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action, module, description, metadata })
+        }).catch(() => {});
+    }
+>>>>>>> Stashed changes
 
     // Encapsular todo en un namespace único para evitar conflictos
     window.SearchQRModule = (function() {
@@ -340,7 +360,20 @@ $documents = $controller->getDocuments();
                 .forEach(row => row.classList.remove('is-selected'));
         }
 
+<<<<<<< Updated upstream
         function seleccionarDocumento(qrUrl, title, partida) {
+=======
+        function normalizeQrPath(rawPath) {
+            if (!rawPath) return '';
+            const normalized = rawPath.replace(/\\/g, '/').trim();
+            if (/^https?:\/\//i.test(normalized) || normalized.startsWith('/')) {
+                return normalized;
+            }
+            return '/ConsultaTituloPlandet-1/' + normalized.replace(/^\/+/, '');
+        }
+
+        function seleccionarDocumento(qrUrl, title, partida, uniqueId) {
+>>>>>>> Stashed changes
             console.log('SearchQR: Seleccionando documento:', {
                 qrUrl,
                 title,
@@ -353,7 +386,16 @@ $documents = $controller->getDocuments();
             const partidaInput = document.getElementById('search-partida-input');
 
             if (qrDisplay && qrPlaceholder) {
+<<<<<<< Updated upstream
                 qrDisplay.src = qrUrl;
+=======
+                qrDisplay.src = normalizeQrPath(qrUrl);
+                qrDisplay.onerror = function() {
+                    if (uniqueId) {
+                        qrDisplay.src = '/ConsultaTituloPlandet-1/qr_preview.php?uid=' + encodeURIComponent(uniqueId) + '&t=' + Date.now();
+                    }
+                };
+>>>>>>> Stashed changes
                 qrDisplay.style.display = 'block';
                 qrPlaceholder.style.display = 'none';
             }

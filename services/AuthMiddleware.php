@@ -11,7 +11,11 @@ class AuthMiddleware {
     public static function requireLogin() {
         self::ensureSession();
         if (empty($_SESSION['usuario_id'])) {
+<<<<<<< Updated upstream
             header("Location: /index.php");
+=======
+            header("Location: /ConsultaTituloPlandet-1/index.php");
+>>>>>>> Stashed changes
             exit;
         }
     }
@@ -20,7 +24,11 @@ class AuthMiddleware {
         self::ensureSession();
 
         if (empty($_SESSION['usuario_id'])) {
+<<<<<<< Updated upstream
             header("Location: /index.php");
+=======
+            header("Location: /ConsultaTituloPlandet-1/index.php");
+>>>>>>> Stashed changes
             exit;
         }
 
@@ -31,7 +39,11 @@ class AuthMiddleware {
         }
 
         if (!in_array($userRole, $roles)) {
+<<<<<<< Updated upstream
             header("Location: /index.php?action=dashboard");
+=======
+            header("Location: /ConsultaTituloPlandet-1/index.php?action=dasboard");
+>>>>>>> Stashed changes
             exit;
         }
     }
