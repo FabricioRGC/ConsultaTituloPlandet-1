@@ -29,7 +29,7 @@ class QRController {
         $uniqueId = uniqid('', true);
 
         // 3. URL de consulta
-        //$urlConsulta = "http://200.233.44.151:82/ConsultaTituloPlandet/view.php?id=$uniqueId";
+        //$urlConsulta = "http://200.233.44.151:82/ConsultaTituloPlandet-1/view.php?id=$uniqueId";
         $urlConsulta = URL_VIEW_DOCUMENT . $uniqueId;
         // 4. Generar QR
         $qrPath = $qrService->generarQR($urlConsulta, $uniqueId);
