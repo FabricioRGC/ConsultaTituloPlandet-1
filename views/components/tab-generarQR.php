@@ -1,8 +1,12 @@
 <?php
 require_once __DIR__ . '/../../controllers/QRController.php';
 
+<<<<<<< HEAD
 // 🔥 NUEVO: Obtener tab actual de la URL
 $currentTab = $_GET['tab'] ?? 'generarQR';
+=======
+$tabKey = 'generarQR';
+>>>>>>> CalebRomero
 
 $controller = new QRController();
 
@@ -19,7 +23,11 @@ $qrPath = isset($_GET['qr']) ? htmlspecialchars($_GET['qr']) : "";
 $fechaActual = date('Y-m-d');
 ?>
 
+<<<<<<< HEAD
 <link rel="stylesheet" href="/styles/tab-generarQR.css">
+=======
+<link rel="stylesheet" href="/ConsultaTituloPlandet-1/styles/tab-generarQR.css">
+>>>>>>> CalebRomero
 
 <div class="tab-generarQR">
     <div class="main-container">
@@ -32,7 +40,11 @@ $fechaActual = date('Y-m-d');
 
                         <!-- 🔥 MODIFICADO: Agregar &tab= en action -->
                         <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate
+<<<<<<< HEAD
                               action="?action=dashboard&tab=<?= urlencode($currentTab) ?>">
+=======
+                              action="?action=dasboard&tab=<?= urlencode($tabKey) ?>">
+>>>>>>> CalebRomero
                             
                             <button id="clearForm" type="button" class="btn-action btn-clear-form form-clear-btn">
                                 <span>🗑️</span> Limpiar Formulario
@@ -80,11 +92,19 @@ $fechaActual = date('Y-m-d');
                                 <h3 class="position-subtitle">Código QR</h3>
                                 <div class="input-row">
                                     <label for="qr-x">Posición X:</label>
+<<<<<<< HEAD
                                     <input type="number" id="qr-x" step="0.1" value="0.6" class="input-small">
                                 </div>
                                 <div class="input-row">
                                     <label for="qr-y">Posición Y:</label>
                                     <input type="number" id="qr-y" step="0.1" value="2.0" class="input-small">
+=======
+                                    <input type="number" id="qr-x" step="0.1" value="0.75" class="input-small">
+                                </div>
+                                <div class="input-row">
+                                    <label for="qr-y">Posición Y:</label>
+                                    <input type="number" id="qr-y" step="0.1" value="2.1" class="input-small">
+>>>>>>> CalebRomero
                                 </div>
                             </div>
 
@@ -92,11 +112,19 @@ $fechaActual = date('Y-m-d');
                                 <h3 class="position-subtitle">Número de Partida</h3>
                                 <div class="input-row">
                                     <label for="num-x">Posición X:</label>
+<<<<<<< HEAD
                                     <input type="number" id="num-x" step="0.1" value="2.15" class="input-small">
                                 </div>
                                 <div class="input-row">
                                     <label for="num-y">Posición Y:</label>
                                     <input type="number" id="num-y" step="0.1" value="1.40" class="input-small">
+=======
+                                    <input type="number" id="num-x" step="0.1" value="2.20" class="input-small">
+                                </div>
+                                <div class="input-row">
+                                    <label for="num-y">Posición Y:</label>
+                                    <input type="number" id="num-y" step="0.1" value="1.43" class="input-small">
+>>>>>>> CalebRomero
                                 </div>
                             </div>
                         </div>
@@ -181,7 +209,12 @@ $fechaActual = date('Y-m-d');
 
 <script>
     // 🔥 NUEVO: Obtener tab actual desde PHP
+<<<<<<< HEAD
     const currentTab = "<?= $currentTab ?>";
+=======
+    const currentTab = "<?= $tabKey ?>";
+    const uploadSucceeded = "<?= ($_GET['uploaded'] ?? '') === '1' ? '1' : '0' ?>" === "1";
+>>>>>>> CalebRomero
     const serverQrPath = "<?php echo $qrPath; ?>";
     const mainForm = document.querySelector('.needs-validation');
 
@@ -234,7 +267,32 @@ $fechaActual = date('Y-m-d');
     // ================================
     // CARGA INICIAL DE DATOS
     // ================================
+<<<<<<< HEAD
     document.addEventListener("DOMContentLoaded", function() {
+=======
+    function resetGenerationFormState() {
+        mainForm.reset();
+        titleInput.value = "";
+        partidaInput.value = "";
+        tituloNumberInput.value = "";
+        numberInput.value = "";
+        pdfViewer.src = "";
+        pdfPreview.src = "";
+        qrPreview.src = "";
+        qrCodeImageUrl = null;
+        localStorage.removeItem('qr_form_title');
+        localStorage.removeItem('qr_form_partida');
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        if (uploadSucceeded) {
+            resetGenerationFormState();
+            const url = new URL(window.location.href);
+            url.searchParams.delete('uploaded');
+            window.history.replaceState({}, '', url.toString());
+        }
+
+>>>>>>> CalebRomero
         loadTitleAndPartida();
 
         if (serverQrPath) {
@@ -265,6 +323,7 @@ $fechaActual = date('Y-m-d');
     // FUNCIONES DE LIMPIEZA
     // ================================
     document.getElementById("clearForm").addEventListener("click", function() {
+<<<<<<< HEAD
         mainForm.reset();
 
         tituloNumberInput.value = "";
@@ -277,11 +336,18 @@ $fechaActual = date('Y-m-d');
 
         localStorage.removeItem('qr_form_title');
         localStorage.removeItem('qr_form_partida');
+=======
+        resetGenerationFormState();
+>>>>>>> CalebRomero
 
         mainForm.classList.remove('was-validated');
 
         // 🔥 MODIFICADO: Mantener tab al limpiar
+<<<<<<< HEAD
         window.location.href = "?action=dashboard&tab=" + encodeURIComponent(currentTab);
+=======
+        window.location.href = "?action=dasboard&tab=" + encodeURIComponent(currentTab);
+>>>>>>> CalebRomero
 
         showToast("Formulario y datos persistentes limpiados.", "success");
     });
@@ -487,4 +553,8 @@ $fechaActual = date('Y-m-d');
         const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
         toast.show();
     }
+<<<<<<< HEAD
 </script>
+=======
+</script>
+>>>>>>> CalebRomero

@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="/styles/tab-generarTitulo.css">
+<link rel="stylesheet" href="styles/tab-generarTitulo.css">
 
 <body onload="cargarDatos()" data-component="generar-titulo" class="gt-body">
 

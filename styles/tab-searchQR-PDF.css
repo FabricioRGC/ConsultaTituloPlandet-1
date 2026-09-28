@@ -100,11 +100,47 @@
   padding: 1rem;
   text-align: left;
   font-weight: 600;
+<<<<<<< HEAD
   color: #2d3748;
+=======
+  color: #4a5568;
+>>>>>>> CalebRomero
   border-bottom: 2px solid #e2e8f0;
   white-space: nowrap;
 }
 
+<<<<<<< HEAD
+=======
+.sqr-th-sortable {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  transition: background-color 0.2s;
+}
+
+.sqr-th-sortable:hover {
+  background-color: #edf2f7;
+}
+
+.sqr-th-sortable::after {
+  content: "↕";
+  position: absolute;
+  right: 8px;
+  color: #cbd5e0;
+  font-size: 0.8em;
+}
+
+.sqr-th-sortable.asc::after {
+  content: "↑";
+  color: #4a5568;
+}
+
+.sqr-th-sortable.desc::after {
+  content: "↓";
+  color: #4a5568;
+}
+
+>>>>>>> CalebRomero
 .sqr-th-select {
   width: 80px;
   text-align: center;

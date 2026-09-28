@@ -1,11 +1,19 @@
 <?php
+<<<<<<< HEAD
 require_once __DIR__ . '/../../controllers/QRController.php';
+=======
+require_once __DIR__ . 'ConsultaTituloPlandet-1/controllers/QRController.php';
+>>>>>>> CalebRomero
 
 $controller = new QRController();
 $controller->subirMultiples();
 ?>
 
+<<<<<<< HEAD
 <link rel="stylesheet" href="/styles/tab-ingresarVarios.css">
+=======
+<link rel="stylesheet" href="ConsultaTituloPlandet-1/styles/tab-ingresarVarios.css">
+>>>>>>> CalebRomero
 
 <div class="upload-wrapper">
     <div class="upload-container">

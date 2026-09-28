@@ -4,10 +4,17 @@ require_once __DIR__ . '/../../controllers/DocumentController.php';
 $data = (new DocumentController())->handleUpdateQRPDF();
 extract($data);
 
+<<<<<<< HEAD
 $currentTab = $_GET['tab'] ?? 'updateQR-PDF';
 ?>
 
 <link rel="stylesheet" href="/styles/tab-updateQR-PDF.css">
+=======
+$tabKey = 'updateQR-PDF';
+?>
+
+<link rel="stylesheet" href="/ConsultaTituloPlandet-1/styles/tab-updateQR-PDF.css">
+>>>>>>> CalebRomero
 
 <div class="upd-container" data-component="update-qr-pdf">
 
@@ -19,17 +26,29 @@ $currentTab = $_GET['tab'] ?? 'updateQR-PDF';
             <h3 class="upd-title">🔍 Buscar Documento para Actualizar</h3>
         </div>
         <div class="upd-card-body">
+<<<<<<< HEAD
             <form method="post" action="?action=dashboard&tab=<?= urlencode($currentTab) ?>" class="upd-search-form">
                 <div class="upd-form-row">
                     <div class="upd-form-group">
                         <label class="upd-label">Título del Documento</label>
                         <input type="text" name="numero" class="upd-input" placeholder="Ej: Titulo-123-MPT" required>
+=======
+            <form method="post" action="?action=dasboard&tab=<?= urlencode($tabKey) ?>" class="upd-search-form">
+                <div class="upd-form-row">
+                    <div class="upd-form-group">
+                        <label class="upd-label">Título del Documento</label>
+                        <input type="text" name="numero" class="upd-input" placeholder="Ej: 183" required>
+>>>>>>> CalebRomero
                         <small class="upd-help-text">💡 Si existen varios documentos con el mismo título, se mostrarán todos para que selecciones el correcto.</small>
                     </div>
                     <div class="upd-form-group">
                         <label class="upd-label">Año</label>
                         <select name="year" class="upd-select" required>
                             <option value="">Seleccione año</option>
+<<<<<<< HEAD
+=======
+                            <option value="2026">2026</option>
+>>>>>>> CalebRomero
                             <option value="2025">2025</option>
                             <option value="2024">2024</option>
                             <option value="2023">2023</option>
@@ -71,7 +90,11 @@ $currentTab = $_GET['tab'] ?? 'updateQR-PDF';
                         <span>📄 Partida: <?= htmlspecialchars($doc['partida']) ?></span>
                         <?php endif; ?>
                     </div>
+<<<<<<< HEAD
                     <a href="?action=dashboard&tab=<?= urlencode($currentTab) ?>&select_doc=<?= $doc['id'] ?>" 
+=======
+                    <a href="?action=dasboard&tab=<?= urlencode($tabKey) ?>&select_doc=<?= $doc['id'] ?>" 
+>>>>>>> CalebRomero
                        class="upd-btn upd-btn-secondary upd-btn-sm">
                         Seleccionar →
                     </a>
@@ -79,7 +102,11 @@ $currentTab = $_GET['tab'] ?? 'updateQR-PDF';
                 <?php endforeach; ?>
             </div>
 
+<<<<<<< HEAD
             <a href="?action=dashboard&tab=<?= urlencode($currentTab) ?>" class="upd-btn upd-btn-outline">
+=======
+            <a href="?action=dasboard&tab=<?= urlencode($tabKey) ?>" class="upd-btn upd-btn-outline">
+>>>>>>> CalebRomero
                 ← Nueva Búsqueda
             </a>
         </div>
@@ -100,7 +127,11 @@ $currentTab = $_GET['tab'] ?? 'updateQR-PDF';
                     <span>📅 Fecha: <?= htmlspecialchars($selectedDocument['fecha'] ?? 'N/A') ?></span>
                 </div>
             </div>
+<<<<<<< HEAD
             <a href="?action=dashboard&tab=<?= urlencode($currentTab) ?>" class="upd-btn upd-btn-outline upd-btn-sm">
+=======
+            <a href="?action=dasboard&tab=<?= urlencode($tabKey) ?>" class="upd-btn upd-btn-outline upd-btn-sm">
+>>>>>>> CalebRomero
                 ← Volver
             </a>
         </div>
@@ -120,7 +151,11 @@ $currentTab = $_GET['tab'] ?? 'updateQR-PDF';
                     <h3 class="upd-section-title">✏️ Actualizar</h3>
                     
                     <form method="post" enctype="multipart/form-data" class="upd-update-form" 
+<<<<<<< HEAD
                           action="?action=dashboard&tab=<?= urlencode($currentTab) ?>">
+=======
+                          action="?action=dasboard&tab=<?= urlencode($tabKey) ?>">
+>>>>>>> CalebRomero
                         
                         <input type="hidden" name="document_id" value="<?= $selectedDocument['id'] ?>">
 
@@ -233,10 +268,19 @@ $currentTab = $_GET['tab'] ?? 'updateQR-PDF';
         <div class="upd-card-body upd-empty-body">
             <div class="upd-empty-icon">🔍</div>
             <h3 class="upd-empty-title">No se encontraron resultados</h3>
+<<<<<<< HEAD
             <p class="upd-empty-text">No hay documentos que coincidan con tu búsqueda</p>
             <form method="get" style="margin-top: 1rem;">
                 <input type="hidden" name="action" value="dashboard">
                 <input type="hidden" name="tab" value="<?= urlencode($currentTab) ?>">
+=======
+            <p class="upd-empty-text">
+                <?= htmlspecialchars($error ?: 'No hay documentos que coincidan con tu búsqueda') ?>
+            </p>
+            <form method="get" style="margin-top: 1rem;">
+                <input type="hidden" name="action" value="dasboard">
+                <input type="hidden" name="tab" value="<?= urlencode($tabKey) ?>">
+>>>>>>> CalebRomero
                 <button type="submit" class="upd-btn upd-btn-primary">
                     🔍 Nueva Búsqueda
                 </button>
@@ -275,7 +319,11 @@ $currentTab = $_GET['tab'] ?? 'updateQR-PDF';
             </div>
 
             <div class="upd-success-actions">
+<<<<<<< HEAD
                 <a href="?action=dashboard&tab=<?= urlencode($currentTab) ?>" class="upd-btn upd-btn-primary">
+=======
+                <a href="?action=dasboard&tab=<?= urlencode($tabKey) ?>" class="upd-btn upd-btn-primary">
+>>>>>>> CalebRomero
                     ✏️ Actualizar Otro Documento
                 </a>
             </div>
@@ -351,4 +399,8 @@ $currentTab = $_GET['tab'] ?? 'updateQR-PDF';
         });
     }
 })();
+<<<<<<< HEAD
 </script>
+=======
+</script>
+>>>>>>> CalebRomero

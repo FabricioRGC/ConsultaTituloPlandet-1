@@ -3,18 +3,20 @@ require_once __DIR__ . '/../models/User.php';
 
 class AuthService {
 
-    public function login(string $name, string $password) {
-        $user = Usuario::findByName($name);
+    public function login(string $credential, string $password) {
+        $user = Usuario::findByCredential($credential);
         if (!$user) return false;
 
-         if (!$user['password'] === $password) {
+         if ($user['password'] !== $password) {
             return false;
         }
 
-        // Opcional: puedes refrescar datos o verificar estado (activo, etc.)
+        Usuario::updateLastLogin((int)$user['id']);
+
         return [
             'id' => $user['id'],
             'name' => $user['name'],
+            'email' => $user['email'],
             'rol' => $user['rol'],
         ];
     }

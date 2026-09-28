@@ -4,6 +4,7 @@ require_once __DIR__ . '/../config/database.php';
 class DocumentModel
 {
     private PDO $db;
+    private array $columnCache = [];
 
     public function __construct()
     {
@@ -12,29 +13,28 @@ class DocumentModel
 
     public function insert($partida, $title, $pdfPath, $qrPath, $uniqueId, $fecha)
     {
-        $sql = "INSERT INTO documents (partida, title, pdf_path, qr_code, unique_id, fecha)
-        VALUES (?, ?, ?, ?, ?, ?)";
+        if ($this->hasColumn('fecha')) {
+            $sql = "INSERT INTO documents (partida, title, pdf_path, qr_code, unique_id, fecha)
+                    VALUES (?, ?, ?, ?, ?, ?)";
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute([$partida, $title, $pdfPath, $qrPath, $uniqueId, $fecha]);
+        }
 
-        $stmt =  $this->db->prepare($sql);
-        return $stmt->execute([
-            $partida,
-            $title,
-            $pdfPath,
-            $qrPath,
-            $uniqueId,
-            $fecha
-        ]);
+        $sql = "INSERT INTO documents (partida, title, pdf_path, qr_code, unique_id)
+                VALUES (?, ?, ?, ?, ?)";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([$partida, $title, $pdfPath, $qrPath, $uniqueId]);
     }
 
     public function getAll()
     {
-        $stmt = $this->db->query("SELECT * FROM documents ORDER BY id ASC");
+        $orderBy = $this->hasColumn('fecha') ? 'fecha DESC' : 'id DESC';
+        $stmt = $this->db->query("SELECT * FROM documents ORDER BY $orderBy");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function search($titulo = '', $partida = '', $fecha = '')
     {
-        // Si no hay ningún criterio, devolver todo
         if (empty($titulo) && empty($partida) && empty($fecha)) {
             return $this->getAll();
         }
@@ -53,16 +53,21 @@ class DocumentModel
         }
 
         if (!empty($fecha)) {
-            // fecha completa (YYYY-MM-DD)
-            $conditions[] = "DATE(fecha) = ?";
-            $params[] = $fecha;
+            if ($this->hasColumn('fecha')) {
+                $conditions[] = "DATE(fecha) = ?";
+                $params[] = $fecha;
+            } elseif ($this->hasColumn('created')) {
+                $conditions[] = "DATE(created) = ?";
+                $params[] = $fecha;
+            }
         }
 
-        // ✅ AND dinámico (comportamiento esperado)
-        $sql = "SELECT * FROM documents 
-                WHERE " . implode(' AND ', $conditions) . " 
-                ORDER BY id ASC";
+        if (empty($conditions)) {
+            return $this->getAll();
+        }
 
+        $orderBy = $this->hasColumn('fecha') ? 'fecha DESC' : 'id DESC';
+        $sql = "SELECT * FROM documents WHERE " . implode(' AND ', $conditions) . " ORDER BY $orderBy";
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
 
@@ -71,11 +76,19 @@ class DocumentModel
 
     public function searchDocuments(string $numero, string $year): array
     {
-        $sql = "SELECT * FROM documents
-                WHERE title LIKE ?
-                AND YEAR(fecha) = ?";
+        $sql = "SELECT * FROM documents WHERE title LIKE ?";
+        $params = ["%$numero%"];
+
+        if ($this->hasColumn('fecha')) {
+            $sql .= " AND YEAR(fecha) = ?";
+            $params[] = $year;
+        } elseif ($this->hasColumn('created')) {
+            $sql .= " AND YEAR(created) = ?";
+            $params[] = $year;
+        }
+
         $stmt = $this->db->prepare($sql);
-        $stmt->execute(["%$numero%", $year]);
+        $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -95,14 +108,10 @@ class DocumentModel
         $stmt->execute([$pdf, $qr, $uniqueId, $id]);
     }
 
-
     public function delete($id)
     {
-        $db = Database::connection();
-
         $sql = "DELETE FROM documents WHERE id = ?";
-        $stmt = $db->prepare($sql);
-
+        $stmt = $this->db->prepare($sql);
         return $stmt->execute([$id]);
     }
 
@@ -113,5 +122,24 @@ class DocumentModel
         $stmt->execute([$uniqueId]);
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    private function hasColumn(string $columnName): bool
+    {
+        if (array_key_exists($columnName, $this->columnCache)) {
+            return $this->columnCache[$columnName];
+        }
+
+        $stmt = $this->db->prepare(
+            "SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
+             WHERE TABLE_SCHEMA = DATABASE()
+             AND TABLE_NAME = 'documents'
+             AND COLUMN_NAME = ?"
+        );
+        $stmt->execute([$columnName]);
+        $exists = ((int)$stmt->fetchColumn()) > 0;
+        $this->columnCache[$columnName] = $exists;
+
+        return $exists;
     }
 }
