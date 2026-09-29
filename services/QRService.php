@@ -2,10 +2,9 @@
 require_once __DIR__ . '/../libraries/phpqrcode/qrlib.php';
 class QRService
 {
-       public function generarQR($url, $uniqueId)
+    public function generarQR($url, $uniqueId)
     {
         $dir = __DIR__ . '/../qrcodes/';
-
         if (!is_dir($dir)) mkdir($dir, 0777, true);
 
         $filename = $uniqueId . ".png";
@@ -19,11 +18,9 @@ class QRService
     public function moverPDF($file)
     {
         $dir = __DIR__ . '/../uploads/';
-
         if (!is_dir($dir)) mkdir($dir, 0777, true);
 
         $dest = $dir . basename($file['name']);
-
         move_uploaded_file($file['tmp_name'], $dest);
 
         return "uploads/" . basename($file['name']);

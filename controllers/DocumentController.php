@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../models/DocumentModel.php';
+require_once __DIR__ . '/../models/AuditModel.php';
 require_once __DIR__ . '/../services/QRService.php';
 require_once __DIR__ . '/../config/urls.php';
 
@@ -20,11 +21,34 @@ class DocumentController
      */
     public function getDocuments()
     {
-       $titulo  = $_POST['title']   ?? '';
+        $titulo  = $_POST['title']   ?? '';
         $partida = $_POST['partida'] ?? '';
         $fecha   = $_POST['fecha']   ?? '';
 
-        return $this->model->search($titulo, $partida, $fecha);
+        $results = $this->model->search($titulo, $partida, $fecha);
+
+        if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+        $hasFilters = ($titulo !== '' || $partida !== '' || $fecha !== '');
+        if ($hasFilters) {
+            $audit = new AuditModel();
+            $audit->logActivity(
+                (int)($_SESSION['usuario_id'] ?? 0),
+                'SEARCH_DOCUMENTS',
+                'DOCUMENT',
+                'documents',
+                null,
+                'Busqueda de documentos',
+                [
+                    'title' => $titulo,
+                    'partida' => $partida,
+                    'fecha' => $fecha,
+                    'results' => is_array($results) ? count($results) : 0
+                ],
+                $_SESSION['audit_session_token'] ?? session_id()
+            );
+        }
+
+        return $results;
     }
 
     public function handleUpdateQRPDF(): array
@@ -40,20 +64,44 @@ class DocumentController
            1️⃣ BUSCAR DOCUMENTO
         ========================== */
         if (isset($_POST['numero'], $_POST['year'])) {
-            $results = $this->model->searchDocuments(
-                $_POST['numero'],
-                $_POST['year']
-            );
+            try {
+                $results = $this->model->searchDocuments(
+                    $_POST['numero'],
+                    $_POST['year']
+                );
 
-            $searchResults = is_array($results) ? $results : [];
+                $searchResults = is_array($results) ? $results : [];
 
-            if (count($searchResults) === 0) {
+                if (count($searchResults) === 0) {
+                    $mode = 'empty';
+                    $error = 'No se encontro el documento.';
+                } elseif (count($searchResults) === 1) {
+                    $selectedDocument = $searchResults[0];
+                    $mode = 'update';
+                } else {
+                    $mode = 'list';
+                }
+
+                if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+                $audit = new AuditModel();
+                $audit->logActivity(
+                    (int)($_SESSION['usuario_id'] ?? 0),
+                    'SEARCH_UPDATE_DOCUMENT',
+                    'DOCUMENT',
+                    'documents',
+                    null,
+                    'Busqueda en modulo actualizar',
+                    [
+                        'numero' => (string)$_POST['numero'],
+                        'year' => (string)$_POST['year'],
+                        'results' => count($searchResults)
+                    ],
+                    $_SESSION['audit_session_token'] ?? session_id()
+                );
+            } catch (Throwable $e) {
+                $searchResults = [];
                 $mode = 'empty';
-            } elseif (count($searchResults) === 1) {
-                $selectedDocument = $searchResults[0];
-                $mode = 'update';
-            } else {
-                $mode = 'list';
+                $error = 'No se encontro el documento.';
             }
         }
 
@@ -64,6 +112,18 @@ class DocumentController
             $selectedDocument = $this->model->getById((int)$_GET['select_doc']);
             if ($selectedDocument) {
                 $mode = 'update';
+                if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+                $audit = new AuditModel();
+                $audit->logActivity(
+                    (int)($_SESSION['usuario_id'] ?? 0),
+                    'SELECT_DOCUMENT',
+                    'DOCUMENT',
+                    'documents',
+                    (string)$selectedDocument['id'],
+                    'Seleccion de documento para actualizar',
+                    null,
+                    $_SESSION['audit_session_token'] ?? session_id()
+                );
             }
         }
 
@@ -97,6 +157,25 @@ class DocumentController
                     $newPdfPath,
                     $qrPath,
                     $uniqueId ?? $doc['unique_id']
+                );
+
+                if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+                $audit = new AuditModel();
+                $audit->logActivity(
+                    (int)($_SESSION['usuario_id'] ?? 0),
+                    'UPDATE_DOCUMENT',
+                    'DOCUMENT',
+                    'documents',
+                    (string)$doc['id'],
+                    $updateType === 'pdf_and_qr'
+                        ? 'Actualizacion de PDF y QR'
+                        : 'Actualizacion solo de PDF',
+                    [
+                        'update_type' => $updateType,
+                        'pdf_path' => $newPdfPath,
+                        'qr_changed' => $updateType === 'pdf_and_qr'
+                    ],
+                    $_SESSION['audit_session_token'] ?? session_id()
                 );
 
                 $success = [
@@ -133,6 +212,20 @@ class DocumentController
 
         $pdfPath = $document['pdf_path'];
         $title   = $document['title'];
+
+        if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+        
+        $audit = new AuditModel();
+        $audit->logActivity(
+            (int)($_SESSION['usuario_id'] ?? 0),
+            'VIEW_PDF',
+            'DOCUMENT',
+            'documents',
+            (string)($document['id'] ?? ''),
+            'Visualizacion de PDF',
+            ['unique_id' => $uniqueId, 'title' => $title],
+            $_SESSION['audit_session_token'] ?? session_id()
+        );
 
         if (!file_exists($pdfPath)) {
             http_response_code(404);

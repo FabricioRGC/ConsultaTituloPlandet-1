@@ -1,8 +1,7 @@
 <?php
 require_once __DIR__ . '/../../controllers/QRController.php';
 
-// 🔥 NUEVO: Obtener tab actual de la URL
-$currentTab = $_GET['tab'] ?? 'generarQR';
+$tabKey = 'generarQR';
 
 $controller = new QRController();
 
@@ -19,7 +18,7 @@ $qrPath = isset($_GET['qr']) ? htmlspecialchars($_GET['qr']) : "";
 $fechaActual = date('Y-m-d');
 ?>
 
-<link rel="stylesheet" href="/styles/tab-generarQR.css">
+<link rel="stylesheet" href="/ConsultaTituloPlandet/styles/tab-generarQR.css">
 
 <div class="tab-generarQR">
     <div class="main-container">
@@ -32,12 +31,12 @@ $fechaActual = date('Y-m-d');
 
                         <!-- 🔥 MODIFICADO: Agregar &tab= en action -->
                         <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate
-                              action="?action=dashboard&tab=<?= urlencode($currentTab) ?>">
-                            
+                            action="?action=dasboard&tab=<?= urlencode($tabKey) ?>">
+
                             <button id="clearForm" type="button" class="btn-action btn-clear-form form-clear-btn">
                                 <span>🗑️</span> Limpiar Formulario
                             </button>
-                            
+
                             <div class="form-group">
                                 <label for="title" class="form-label">Nombre del Título:</label>
                                 <input type="text" class="form-control" placeholder="Ingrese el título" id="title" name="title" required>
@@ -65,10 +64,9 @@ $fechaActual = date('Y-m-d');
                                 <div class="invalid-feedback">Por favor, sube un archivo PDF válido.</div>
                             </div>
 
-                            <button type="submit" class="btn btn-submit"
-                                onclick="return confirm('¿Seguro que quieres subir este archivo?');">
+                            <button type="button" class="btn btn-submit" onclick="validarYSubir(this.form);">
                                 📁 Subir Archivo
-                            </button>
+                            </button>   
                         </form>
                     </section>
 
@@ -80,11 +78,11 @@ $fechaActual = date('Y-m-d');
                                 <h3 class="position-subtitle">Código QR</h3>
                                 <div class="input-row">
                                     <label for="qr-x">Posición X:</label>
-                                    <input type="number" id="qr-x" step="0.1" value="0.6" class="input-small">
+                                    <input type="number" id="qr-x" step="0.1" value="0.75" class="input-small">
                                 </div>
                                 <div class="input-row">
                                     <label for="qr-y">Posición Y:</label>
-                                    <input type="number" id="qr-y" step="0.1" value="2.0" class="input-small">
+                                    <input type="number" id="qr-y" step="0.1" value="2.1" class="input-small">
                                 </div>
                             </div>
 
@@ -92,11 +90,11 @@ $fechaActual = date('Y-m-d');
                                 <h3 class="position-subtitle">Número de Partida</h3>
                                 <div class="input-row">
                                     <label for="num-x">Posición X:</label>
-                                    <input type="number" id="num-x" step="0.1" value="2.15" class="input-small">
+                                    <input type="number" id="num-x" step="0.1" value="2.20" class="input-small">
                                 </div>
                                 <div class="input-row">
                                     <label for="num-y">Posición Y:</label>
-                                    <input type="number" id="num-y" step="0.1" value="1.40" class="input-small">
+                                    <input type="number" id="num-y" step="0.1" value="1.43" class="input-small">
                                 </div>
                             </div>
                         </div>
@@ -181,7 +179,8 @@ $fechaActual = date('Y-m-d');
 
 <script>
     // 🔥 NUEVO: Obtener tab actual desde PHP
-    const currentTab = "<?= $currentTab ?>";
+    const currentTab = "<?= $tabKey ?>";
+    const uploadSucceeded = "<?= ($_GET['uploaded'] ?? '') === '1' ? '1' : '0' ?>" === "1";
     const serverQrPath = "<?php echo $qrPath; ?>";
     const mainForm = document.querySelector('.needs-validation');
 
@@ -234,7 +233,81 @@ $fechaActual = date('Y-m-d');
     // ================================
     // CARGA INICIAL DE DATOS
     // ================================
+    function resetGenerationFormState() {
+        mainForm.reset();
+        titleInput.value = "";
+        partidaInput.value = "";
+        tituloNumberInput.value = "";
+        numberInput.value = "";
+        pdfViewer.src = "";
+        pdfPreview.src = "";
+        qrPreview.src = "";
+        qrCodeImageUrl = null;
+        localStorage.removeItem('qr_form_title');
+        localStorage.removeItem('qr_form_partida');
+    }
+
+   function validarYSubir(form) {
+    // 1. Capturar los campos
+    const titulo = document.getElementById('title');
+    const partida = document.getElementById('partida');
+    const archivo = document.getElementById('pdf');
+
+    // 2. Validar que no estén vacíos
+    if (titulo && titulo.value.trim() === '') {
+        showToast('Por favor, ingresa el nombre del título.', 'error');
+        titulo.focus();
+        return;
+    }
+
+    if (partida && partida.value.trim() === '') {
+        showToast('Por favor, ingresa la partida electrónica.', 'error');
+        partida.focus();
+        return;
+    }
+
+    if (archivo && archivo.files.length === 0) {
+        showToast('Por favor, selecciona un archivo PDF válido.', 'error');
+        return;
+    }
+
+    // 3. Capturar los valores para mostrarlos en la ventana de confirmación
+    const valorTitulo = titulo.value.trim();
+    const valorPartida = partida.value.trim();
+    const nombreArchivo = archivo.files[0] ? archivo.files[0].name : 'Sin archivo';
+
+    // 4. Mostrar la ventana elegante con el resumen para verificar
+    Swal.fire({
+        title: 'Verifica los datos de envío',
+        html: `
+            <div style="text-align: left; background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 14px;">
+                <p style="margin: 4px 0;"><strong>Título:</strong> ${valorTitulo}</p>
+                <p style="margin: 4px 0;"><strong>Partida:</strong> ${valorPartida}</p>
+                <p style="margin: 4px 0;"><strong>Archivo:</strong> ${nombreArchivo}</p>
+            </div>
+            <p style="margin-top: 12px; font-size: 14px;">¿Deseas proceder con la subida?</p>
+        `,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#2563eb', // Azul corporativo
+        cancelButtonColor: '#dc2626',  // Rojo cancelar
+        confirmButtonText: 'Sí, subir archivo',
+        cancelButtonText: 'Revisar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            form.submit(); // Envía el formulario si todo está correcto
+        }
+    });
+}
+
     document.addEventListener("DOMContentLoaded", function() {
+        if (uploadSucceeded) {
+            resetGenerationFormState();
+            const url = new URL(window.location.href);
+            url.searchParams.delete('uploaded');
+            window.history.replaceState({}, '', url.toString());
+        }
+
         loadTitleAndPartida();
 
         if (serverQrPath) {
@@ -265,23 +338,12 @@ $fechaActual = date('Y-m-d');
     // FUNCIONES DE LIMPIEZA
     // ================================
     document.getElementById("clearForm").addEventListener("click", function() {
-        mainForm.reset();
-
-        tituloNumberInput.value = "";
-        numberInput.value = "";
-
-        pdfViewer.src = "";
-        pdfPreview.src = "";
-        qrPreview.src = "";
-        qrCodeImageUrl = null;
-
-        localStorage.removeItem('qr_form_title');
-        localStorage.removeItem('qr_form_partida');
+        resetGenerationFormState();
 
         mainForm.classList.remove('was-validated');
 
         // 🔥 MODIFICADO: Mantener tab al limpiar
-        window.location.href = "?action=dashboard&tab=" + encodeURIComponent(currentTab);
+        window.location.href = "?action=dasboard&tab=" + encodeURIComponent(currentTab);
 
         showToast("Formulario y datos persistentes limpiados.", "success");
     });
@@ -376,7 +438,9 @@ $fechaActual = date('Y-m-d');
             return;
         }
 
-        const { jsPDF } = window.jspdf;
+        const {
+            jsPDF
+        } = window.jspdf;
         const doc = new jsPDF({
             orientation: 'landscape',
             unit: 'in',
@@ -457,7 +521,7 @@ $fechaActual = date('Y-m-d');
     // ================================
     function showToast(message, type = "warning") {
         const toastEl = document.getElementById("liveToast");
-        
+
         // Verificar que el toast existe
         if (!toastEl) {
             console.warn("Toast element not found");
@@ -484,7 +548,9 @@ $fechaActual = date('Y-m-d');
             if (toastHeader) toastHeader.textContent = "⚠️ Aviso";
         }
 
-        const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+        const toast = new bootstrap.Toast(toastEl, {
+            delay: 3000
+        });
         toast.show();
     }
 </script>
