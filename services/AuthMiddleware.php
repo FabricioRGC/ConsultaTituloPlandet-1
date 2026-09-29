@@ -20,11 +20,7 @@ class AuthMiddleware {
         self::ensureSession();
 
         if (empty($_SESSION['usuario_id'])) {
-<<<<<<< HEAD
-            header("Location: /index.php");
-=======
             header("Location: /ConsultaTituloPlandet-1/index.php");
->>>>>>> CalebRomero
             exit;
         }
 
@@ -35,11 +31,7 @@ class AuthMiddleware {
         }
 
         if (!in_array($userRole, $roles)) {
-<<<<<<< HEAD
-            header("Location: /index.php?action=dashboard");
-=======
             header("Location: /ConsultaTituloPlandet-1/index.php?action=dasboard");
->>>>>>> CalebRomero
             exit;
         }
     }

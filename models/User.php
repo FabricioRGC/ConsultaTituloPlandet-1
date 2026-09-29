@@ -3,16 +3,6 @@ require_once __DIR__ . '/../config/database.php';
 
 class Usuario {
 
-<<<<<<< HEAD
-     public static function findByName(string $name) {
-        $db = Database::connection();
-        $sql = "SELECT id, name, password, rol FROM user WHERE name = ? LIMIT 1";
-        $stmt = $db->prepare($sql);
-        $stmt->execute([$name]);
-        $user = $stmt->fetch();
-        return $user ?: false;
-    }
-=======
      public static function findByCredential(string $credential) {
         $db = Database::connection();
         $sql = "SELECT id, name, email, password, rol
@@ -30,5 +20,4 @@ class Usuario {
         $stmt = $db->prepare("UPDATE app_users SET last_login_at = NOW() WHERE id = ?");
         $stmt->execute([$id]);
     }
->>>>>>> CalebRomero
 }
